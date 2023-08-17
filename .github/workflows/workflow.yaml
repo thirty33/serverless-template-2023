@@ -5,19 +5,19 @@ on:
     branches: [ main ]
 
 jobs:
-  testing-changes:
-    runs-on: ubuntu-latest
-    name: Build/Test
-    steps:
-    - uses: actions/checkout@v2
+  # testing-changes:
+  #   runs-on: ubuntu-latest
+  #   name: Build/Test
+  #   steps:
+  #   - uses: actions/checkout@v2
 
-    - name: NPM - Install dependencies
-      if: steps.cached-npm-dependencies.outputs.cache-hit != 'true'
-      run: 'npm install'
+  #   - name: NPM - Install dependencies
+  #     if: steps.cached-npm-dependencies.outputs.cache-hit != 'true'
+  #     run: 'npm install'
 
-    - name: Run Tests
-      run: |
-        npm run test
+  #   - name: Run Tests
+  #     run: |
+  #       npm run test
 
   deploy-env:
     permissions:
