@@ -16,12 +16,15 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-dynamodb
   - serverless-offline
+  - serverless-ignore
 
 package:
   individually: true
   patterns:
-    - "!.dynamodb"
-    - "!node_modules"
+    - "!*/**"
+    - "!**"
+  exclude:
+    - .env/**
 
 custom:
   dynamodb:
@@ -38,18 +41,27 @@ custom:
 functions:
   get-users:
     handler: getUsers/handler.getUsers
+    package:
+      patterns:
+        - "getUsers/handler.js"
     events:
       - http:
           path: users/{id}
           method: GET
   create-users:
     handler: createUsers/handler.createUsers
+    package:
+      patterns:
+        - "createUsers/handler.js"
     events:
       - http:
           path: users
           method: POST
   update-users:
     handler: updateUsers/handler.updateUsers
+    package:
+      patterns:
+        - "updateUsers/handler.js"
     events:
       - http:
           path: users/{id}
