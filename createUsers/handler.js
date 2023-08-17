@@ -27,7 +27,7 @@ const createUsers = async (event, context) => {
     Item: userBody
   };
 
-  console.log(params.Item);
+  console.log('test pull to actions',params.Item);
 
   return dynamodb.put(params)
     .promise()
