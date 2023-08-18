@@ -25,7 +25,6 @@ jobs:
     name: Deploy Lambda
     runs-on: ubuntu-latest
     # needs: testing-changes
-    environment: prod
     steps:
     - uses: actions/checkout@v2.0.0
 
@@ -43,8 +42,8 @@ jobs:
     - name: Deploy using sls
       run: 'npx sls deploy'
       env:
-        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_ACCESS_KEY_ID: ${{secrets.AWS_PROD_ACCESS_KEY}}
+        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_PROD_SECRET_KEY}}
 
     - name: Comment PR
       uses: thollander/actions-comment-pull-request@v1
