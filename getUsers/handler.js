@@ -16,7 +16,7 @@ const dynamodb = new aws.DynamoDB.DocumentClient(dynamoDBClientParams);
 const getUsers = async (event, context) => {
 
   let userId = event.pathParameters.id;
-  console.log('test');
+  
   const params = {
     ExpressionAttributeValues: {
         ':pk': userId
