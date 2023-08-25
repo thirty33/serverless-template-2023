@@ -42,6 +42,46 @@ custom:
       migrate: true
     # Uncomment only if you already have a DynamoDB running locally
     # noStart: true
+    
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      # DeletionPolicy: Retain
+      Properties:
+        BucketName: !Sub "s3-bucket-public-${AWS::AccountId}-${aws:region}-${sls:stage}"
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+          BlockPublicPolicy: false
+    BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref S3Bucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action:
+                - 's3:GetObject'
+              Effect: Allow
+              Resource: !Join
+                - ''
+                - - 'arn:aws:s3:::'
+                  - !Ref S3Bucket
+                  - /*
+              Principal: '*'
 
 functions:
   get-users:
@@ -138,42 +178,4 @@ layers:
     package:
       artifact: app/nodejs.zip
 
-resources:
-  Resources:
-    usersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: usersTable
-        AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-        KeySchema:
-          - AttributeName: pk
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-    S3Bucket:
-      Type: AWS::S3::Bucket
-      # DeletionPolicy: Retain
-      Properties:
-        BucketName: !Sub "s3-bucket-public-${AWS::AccountId}-${aws:region}-${sls:stage}"
-        PublicAccessBlockConfiguration:
-          BlockPublicAcls: false
-          BlockPublicPolicy: false
-    BucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: !Ref S3Bucket
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Action:
-                - 's3:GetObject'
-              Effect: Allow
-              Resource: !Join
-                - ''
-                - - 'arn:aws:s3:::'
-                  - !Ref S3Bucket
-                  - /*
-              Principal: '*'
+
