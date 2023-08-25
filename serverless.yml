@@ -162,7 +162,7 @@ functions:
         - "thumbnail/handler.js"
     events:
       - s3:
-          bucket: S3Bucket
+          bucket: !Ref S3Bucket
           event: s3:ObjectCreated:*
           existing: true
           rules:
