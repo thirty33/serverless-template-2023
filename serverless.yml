@@ -14,7 +14,9 @@ provider:
         - Effect: Allow
           Action: 's3:*'
           Resource: !Join [ '/', [ !GetAtt S3Bucket.Arn, '*' ] ]
-
+  environment:
+    BUCKET: !GetAtt S3Bucket.Arn
+  
 plugins:
   - serverless-dotenv-plugin
   - serverless-dynamodb
@@ -42,7 +44,7 @@ custom:
       migrate: true
     # Uncomment only if you already have a DynamoDB running locally
     # noStart: true
-    
+
 resources:
   Resources:
     usersTable:
@@ -160,7 +162,7 @@ functions:
         - "thumbnail/handler.js"
     events:
       - s3:
-          bucket: !GetAtt S3Bucket.Arn
+          bucket: S3Bucket
           event: s3:ObjectCreated:*
           existing: true
           rules:
