@@ -94,6 +94,7 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_DEV_ACCESS_KEY}}
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_DEV_SECRET_KEY}}
+        AWS_DEFAULT_REGION: 'us-west-2'
 
     - name: Comment PR
       uses: thollander/actions-comment-pull-request@v1
