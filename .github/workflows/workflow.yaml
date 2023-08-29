@@ -67,34 +67,21 @@ jobs:
       with:
         name: nodejsdeps
         path: app/
-
-
-    # - uses: unfor19/install-aws-cli-action@v2
-      # run: |
-      #   CREDS=`aws sts assume-role --role-arn arn:aws:iam::005192990501:role/serverless-permission-DeployerRole-1JOI1E68IC771 --role-session-name=gha_deployer`
-      #   export AWS_ACCESS_KEY_ID=`echo $CREDS | jq -r '.Credentials.AccessKeyId'`
-      #   export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r '.Credentials.SecretAccessKey'`
-      #   export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
-      #   export STAGE=dev
-      #   export SLS_DEBUG="*"
-      #   npx sls deploy
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{secrets.AWS_DEV_ACCESS_KEY}}
-    #     AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_DEV_SECRET_KEY}}
-        
+    
     - name: Deploy using sls
       run: |
-        CREDS=`aws sts assume-role --role-arn arn:aws:iam::005192990501:role/serverless-permission-DeployerRole-1JOI1E68IC771 --role-session-name=gha_deployer`
+        CREDS=`aws sts assume-role --role-arn arn:aws:iam::${{secrets.AWS_ACCOUNT_DEV_ID}}:role/serverless-permission-DeployerRole-1JOI1E68IC771 --role-session-name=gha_deployer`
         export AWS_ACCESS_KEY_ID=`echo $CREDS | jq -r '.Credentials.AccessKeyId'`
         export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r '.Credentials.SecretAccessKey'`
         export AWS_SESSION_TOKEN=`echo $CREDS | jq -r '.Credentials.SessionToken'`
-        export STAGE=dev
+        export STAGE=${{secrets.AWS_DEV_STAGE}}
         export SLS_DEBUG="*"
-        npx sls deploy
+        npx sls deploy --stage ${{secrets.AWS_DEV_STAGE}} --region ${{secrets.AWS_DEFAULT_REGION}}
       env:
         AWS_ACCESS_KEY_ID: ${{secrets.AWS_DEV_ACCESS_KEY}}
         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_DEV_SECRET_KEY}}
-        AWS_DEFAULT_REGION: 'us-west-2'
+        AWS_DEFAULT_REGION: ${{secrets.AWS_DEFAULT_REGION}}
+        AWS_ACCOUNT_DEV_ID: ${{secrets.AWS_ACCOUNT_DEV_ID}}
 
     - name: Comment PR
       uses: thollander/actions-comment-pull-request@v1
