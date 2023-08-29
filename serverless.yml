@@ -5,6 +5,10 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs14.x
+  region: us-west-2
+  apiGateway:
+    apiKeys:
+      - example-project-apiKey
   iam:
     role:
       statements:
@@ -16,6 +20,7 @@ provider:
           Resource: !Join [ '/', [ !GetAtt S3Bucket.Arn, '*' ] ]
   environment:
     BUCKET: !GetAtt S3Bucket.Arn
+    SECRET_EGG: ${ssm:/SECRET_EGG}
   
 plugins:
   - serverless-dotenv-plugin
@@ -86,6 +91,11 @@ resources:
               Principal: '*'
 
 functions:
+  custom-authorizer:
+    handler: authorizer/handler.authorize
+    package:
+      patterns:
+        - "authorizer/handler.js"
   get-users:
     handler: getUsers/handler.getUsers
     package:
@@ -93,6 +103,7 @@ functions:
         - "getUsers/handler.js"
     events:
       - http:
+          private: true
           path: users/{id}
           method: GET
           request:
@@ -107,6 +118,9 @@ functions:
     events:
       - http:
           path: users
+          authorizer:
+            name: custom-authorizer
+            resultTtlInSeconds: 15
           method: POST
           request:
             schemas:
