@@ -5,7 +5,8 @@ useDotenv: true
 provider:
   name: aws
   runtime: nodejs14.x
-  region: us-west-2
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-west-2'}
   apiGateway:
     apiKeys:
       - example-project-apiKey
