@@ -51,6 +51,7 @@ Resources:
                       - lambda:List*
                       - lambda:PublishLayerVersion
                       - lambda:DeleteLayerVersion
+                      - lambda:CreateEventSourceMapping
                     Resource:
                       - '*'
                   - Sid: ManageSlsDeploymentBucket
@@ -99,6 +100,7 @@ Resources:
                       - lambda:TagResource
                       - lambda:PublishLayerVersion
                       - lambda:DeleteLayerVersion
+                      - lambda:PutFunctionConcurrency
                     Resource:
                       - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:example-project-*'
             - PolicyName: DeployLogGroups
@@ -157,7 +159,7 @@ Resources:
                       - s3:PutEncryptionConfiguration
                       - s3:PutBucketPublicAccessBlock
                     Resource:
-                      - !Sub 'arn:aws:s3:::s3-bucket-public-*'
+                      - !Sub 'arn:aws:s3:::*'
             - PolicyName: DeployCloudFront
               PolicyDocument:
                 Version: '2012-10-17'
