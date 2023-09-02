@@ -12,6 +12,7 @@
     "aws-sdk": "^2.1433.0",
     "serverless": "^3.21.0",
     "serverless-apigateway-service-proxy": "^2.2.1",
+    "serverless-domain-manager": "^7.1.2",
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-dynamodb": "^0.2.43",
     "serverless-ignore": "^0.2.1",
