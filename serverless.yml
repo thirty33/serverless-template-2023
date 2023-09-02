@@ -31,6 +31,8 @@ plugins:
   - serverless-ignore
   - serverless-apigateway-service-proxy
   - serverless-lift
+  - serverless-domain-manager
+
 package:
   individually: true
   patterns:
@@ -40,8 +42,6 @@ package:
     - .env/**
 
 custom:
-  stage: dev
-  region: us-west-2
   dynamodb:
   # If you only want to use DynamoDB Local in some stages, declare them here
     stages:
@@ -52,6 +52,13 @@ custom:
       migrate: true
     # Uncomment only if you already have a DynamoDB running locally
     # noStart: true
+  customDomain:
+    domainName: ${opt:stage, 'dev'}.joelsuarez.xyz
+    stage: ${opt:stage, 'dev'}
+    basePath: api
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    apiType: rest
   apiGatewayServiceProxies:
     - sqs:
         path: /likeuser
