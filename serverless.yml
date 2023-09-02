@@ -2,6 +2,7 @@ service: example-project
 
 useDotenv: true
 
+
 provider:
   name: aws
   runtime: nodejs14.x
@@ -28,7 +29,8 @@ plugins:
   - serverless-dynamodb
   - serverless-offline
   - serverless-ignore
-
+  - serverless-apigateway-service-proxy
+  - serverless-lift
 package:
   individually: true
   patterns:
@@ -50,6 +52,38 @@ custom:
       migrate: true
     # Uncomment only if you already have a DynamoDB running locally
     # noStart: true
+  apiGatewayServiceProxies:
+    - sqs:
+        path: /likeuser
+        method: post
+        queueName: example-project-likeQueue
+        cors: true
+        response:
+          template:
+            # `success` is used when the integration response is 200
+            success: |-
+              { "message": "accepted" }
+            # `clientError` is used when the integration response is 400
+            clientError: |-
+              { "message": "there is an error in your request" }
+            # `serverError` is used when the integration response is 500
+            serverError: |-
+              { "message": "there was an error handling your request" }
+
+constructs:
+    sqs-queue:
+        type: queue
+        # batchSize: 1
+        worker:
+            handler: likeUser/handler.likeUser
+            # reservedConcurrency: 1
+            package:
+              patterns:
+                - "likeUser/handler.js"
+        extensions:
+          queue:
+            Properties:
+              QueueName: example-project-likeQueue
 
 resources:
   Resources:
